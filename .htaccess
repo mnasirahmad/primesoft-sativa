@@ -1,0 +1,44 @@
+# Sativa Cosmetics ERP - Root Apache / StackCP Configuration (.htaccess)
+# Protects backend/database/config files and routes web traffic to dist/ when built
+
+Options -Indexes
+
+# Block direct HTTP access to backend source, database scripts, env & config files
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Protect internal directories
+  RewriteRule ^(server|src|database|node_modules|\.git|\.aistudio)(/|$) - [F,L,NC]
+
+  # Route root requests to built dist/ bundle if dist/index.html exists
+  RewriteCond %{REQUEST_URI} !^/api(/|$) [NC]
+  RewriteCond %{REQUEST_URI} !^/dist(/|$) [NC]
+  RewriteCond %{DOCUMENT_ROOT}/dist/index.html -f [OR]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)$ dist/$1 [L]
+</IfModule>
+
+<FilesMatch "^(\.env.*|mysql-config\.json|package(-lock)?\.json|tsconfig\.json|vite\.config\.ts|server\.ts|bun\.lock)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+<FilesMatch "\.(sql|log|ts|tsx)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+</IfModule>

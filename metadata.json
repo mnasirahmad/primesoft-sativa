@@ -1,0 +1,8 @@
+{
+  "name": "Sativa Cosmetics ERP - Manufacturing & Inventory System",
+  "description": "Enterprise Manufacturing, Inventory, Formula/BOM, Quality Control, Sales, Purchases, and Double-Entry Accounting ERP for Sativa Cosmetics, Vehari.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
